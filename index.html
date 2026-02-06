@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Session Tracking Login</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #eef2f3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: white;
+    padding: 25px;
+    width: 350px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+input {
+    width: 90%;
+    padding: 8px;
+    margin: 10px 0;
+}
+
+button {
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+a {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: blue;
+}
+</style>
+</head>
+<body>
+
+<div class="container" id="content"></div>
+
+<script>
+function showLogin() {
+    document.getElementById("content").innerHTML = `
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Enter username">
+        <br>
+        <button onclick="login()">Login</button>
+    `;
+}
+
+function login() {
+    let username = document.getElementById("username").value;
+
+    if (username === "") {
+        alert("Please enter username");
+        return;
+    }
+
+    // Store username in session
+    sessionStorage.setItem("user", username);
+    showHome();
+}
+
+function showHome() {
+    let user = sessionStorage.getItem("user");
+
+    if (!user) {
+        showLogin();
+        return;
+    }
+
+    document.getElementById("content").innerHTML = `
+        <h2>Welcome, ${user} 👋</h2>
+        <p>Session is active</p>
+        <button onclick="showProfile()">Go to Profile</button>
+        <br><br>
+        <button onclick="logout()">Logout</button>
+    `;
+}
+
+function showProfile() {
+    let user = sessionStorage.getItem("user");
+
+    if (!user) {
+        showLogin();
+        return;
+    }
+
+    document.getElementById("content").innerHTML = `
+        <h2>Profile Page</h2>
+        <p>Logged in user: <b>${user}</b></p>
+        <a href="#" onclick="showHome()">Back to Home</a><br>
+        <a href="#" onclick="logout()">Logout</a>
+    `;
+}
+
+function logout() {
+    sessionStorage.clear(); // end session
+    alert("Logged out successfully");
+    showLogin();
+}
+
+// On page load
+window.onload = showHome;
+</script>
+
+</body>
+</html>
